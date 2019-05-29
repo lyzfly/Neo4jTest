@@ -18,26 +18,13 @@ import java.sql.SQLException;
 */
 public class Neo4jDemo {
 
-    public static int[][] randomdata(int n){
-        int[][] data  = new int[n][n];
-        for(int i=0;i<data.length;i++){
-            for(int j=0;j<data.length;j++){
-                data[i][j] = Math.random()>0.5?0:1;
-            }
-        }
-        for(int i=0;i<n;i++){
-            data[i][i] = 0;
-        }
-        return data;
-    }
 
     public static void main(String[] args) throws SQLException, IOException {
 
-        Genfile.RandomFile();   //调用随机函数生成数据文件data.txt
+        File file = GenGraph.RandomFile();   //调用随机函数生成数据文件data.txt
         GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new File("Test"));
 
         try(Transaction tx = db.beginTx()){
-            File file = new File("data.txt");
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line= "";
@@ -58,12 +45,12 @@ public class Neo4jDemo {
                 node_address = db.findNode(MyLabel.Address, "address", arr[1]);
                 node_name.createRelationshipTo(node_address, MyRelationshipTypes.In);
             }
-            ResourceIterator<Node> nodes = db.findNodes(MyLabel.Person);
+            /*ResourceIterator<Node> nodes = db.findNodes(MyLabel.Person);
             Node maxDegreeNode = Degree.findMaxDegreeNode(nodes);
             System.out.println("出度最大节点是"+ maxDegreeNode.getProperty("name")+","+"度为"+maxDegreeNode.getDegree(Direction.OUTGOING));
             boolean isConnective = ConnectNodes.connectTwoNode(db.findNode(MyLabel.Person, "name", "A"), db.findNode(MyLabel.Address, "address", "4"));
             System.out.println(isConnective);
-            tx.success();
+            tx.success();*/
         }
         db.shutdown();
 

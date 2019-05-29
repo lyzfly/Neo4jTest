@@ -1,5 +1,6 @@
 package com.lyz.Algorithm;
 
+import org.neo4j.driver.v1.*;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ResourceIterator;
@@ -10,17 +11,22 @@ import org.neo4j.graphdb.ResourceIterator;
 */
 public class Degree {
 
-    public static Node findMaxDegreeNode(ResourceIterator<Node> it){
-        Node maxDegreeNode = null;
-        int maxDegree = Integer.MIN_VALUE;
-        while(it.hasNext()){
-            Node nextNode = it.next();
-            int count = nextNode.getDegree(Direction.OUTGOING);
-            if(count>maxDegree){
-                maxDegree = count;
-                maxDegreeNode = nextNode;
+    public static StatementResult findMaxDegreeNode(){
+        Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "0228"));
+        StatementResult result = null;
+        try(Session session = driver.session()){
+            try(Transaction tx = session.beginTransaction()){
+                result = tx.run("CALL algo.degree.stream(\"Person\", \"In\", {direction: \"incoming\"})\n" +
+                        "YIELD nodeId, score\n" +
+                        "RETURN algo.asNode(nodeId).name AS name, score AS followers\n" +
+                        "ORDER BY followers DESC");
+
+                tx.success();
+
             }
         }
-        return maxDegreeNode;
+        driver.close();
+
+        return result;
     }
 }

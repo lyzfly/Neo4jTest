@@ -13,12 +13,11 @@ public class ClusterDemo {
                         "YIELD nodeId, score\n" +
                         "RETURN algo.asNode(nodeId).id AS name, score AS followers\n" +
                         "ORDER BY followers DESC");
+
                 while(result.hasNext()){
                     Record record = result.next();
+                    record.get("followers");
 
-                    System.out.println(record.asMap());
-                    System.out.println(record.get("name"));
-                    System.out.println(record.get("followers"));
                 }
 
                 tx.success();
