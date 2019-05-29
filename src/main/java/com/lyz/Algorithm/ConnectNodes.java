@@ -23,7 +23,6 @@ public class ConnectNodes {
             }
         }
         driver.close();
-
         return flag;
     }
 }

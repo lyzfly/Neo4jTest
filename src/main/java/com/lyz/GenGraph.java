@@ -8,7 +8,15 @@ import static org.neo4j.driver.v1.Values.parameters;
 
 public class GenGraph {
 
-    public static File RandomFile() throws IOException {
+    public static File RandomFile() throws  IOException{
+        Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "0228"));
+        try (Session session = driver.session()) {
+            try(Transaction tx = session.beginTransaction()){
+                tx.run("MATCH(a:Person) DETACH DELETE a");
+                tx.success();
+            }
+        }
+        driver.close();
         File file = new File("data.txt");
 
         try {
@@ -18,12 +26,12 @@ public class GenGraph {
 
             FileOutputStream outputStream = new FileOutputStream(file);
             StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 10; i++) {
 
                 char base = 'A';
                 Random rand = new Random();
-                int add_parm1 = rand.nextInt(10);
-                int add_parm2 = rand.nextInt(10);
+                int add_parm1 = rand.nextInt(4);
+                int add_parm2 = rand.nextInt(4);
 
                 char personA = (char) (base + add_parm1);
                 char personB = (char) (base + add_parm2);
