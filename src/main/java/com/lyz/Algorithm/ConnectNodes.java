@@ -22,6 +22,7 @@ public class ConnectNodes {
                 tx.success();
             }
         }
+        System.out.println(flag);
         driver.close();
         return flag;
     }

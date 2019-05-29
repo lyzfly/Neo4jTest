@@ -1,6 +1,7 @@
 package com.lyz;
 
 import com.lyz.Algorithm.ClusterDemo;
+import com.lyz.Algorithm.ConnectNodes;
 import com.lyz.Algorithm.Degree;
 import org.neo4j.driver.v1.GraphDatabase;
 
@@ -10,6 +11,7 @@ public class Neo4jMain {
 
         Degree.findMaxDegreeNode();
         ClusterDemo.find();
-
+        ConnectNodes.connectTwoNode("A", "C");
+        ConnectNodes.connectTwoNode("A", "B");
     }
 }
