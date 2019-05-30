@@ -1,4 +1,4 @@
-package com.lyz.Algorithm;
+package com.lyz;
 
 import org.neo4j.driver.v1.*;
 import org.neo4j.graphdb.Direction;
@@ -11,8 +11,7 @@ import org.neo4j.graphdb.ResourceIterator;
 */
 public class Degree {
 
-    public static StatementResult findMaxDegreeNode(){
-        Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "0228"));
+    public static StatementResult findMax(Driver driver){
         StatementResult result = null;
         try(Session session = driver.session()){
             try(Transaction tx = session.beginTransaction()){
@@ -21,11 +20,15 @@ public class Degree {
                         "RETURN algo.asNode(nodeId).name AS name, score AS followers\n" +
                         "ORDER BY followers DESC");
 
+                while(result.hasNext()){
+                    Record record = result.next();
+
+                    System.out.println(record.get("name")+" "+record.get("followers"));
+                }
                 tx.success();
 
             }
         }
-        driver.close();
 
         return result;
     }
