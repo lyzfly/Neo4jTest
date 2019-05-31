@@ -29,7 +29,25 @@ public class Connectivity extends CallAlgorithm{
         }
         System.out.println(flag);
         return flag;
-
     }
 
+    public static boolean SingleSourceShortest(Driver driver,String startnode) {
+        boolean flag = false;
+        try (Session session = driver.session()) {
+            try (Transaction tx = session.beginTransaction()) {
+                StatementResult result  = tx.run("MATCH (n:Loc {name:{x})\n" +
+                        "CALL algo.shortestPath.deltaStepping.stream(n, 'cost', 3.0)\n" +
+                        "YIELD nodeId, distance\n" +
+                        "\n" +
+                        "RETURN algo.asNode(nodeId).name AS destination, distance",parameters("x",startnode));
+                while(result.hasNext()){
+                    Record record = result.next();
+                    System.out.println(record.get("destination")+" "+record.get("distance"));
+                    flag = true;
+                }
+                tx.success();
+            }
+        }
+        return flag;
+    }
 }

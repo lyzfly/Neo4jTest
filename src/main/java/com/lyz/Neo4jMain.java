@@ -17,12 +17,11 @@ public class Neo4jMain {
         Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j", "0228"));
         DelGraph.delete(driver);
         GenGraph.gengraph(driver);
-        Degree.findMax(driver);
         Importance.Degree(driver);
         Importance.PageRank(driver);
-        Community.SCC(driver);
-        Connectivity.shortestPath(driver, "A", "C");
-        Connectivity.shortestPath(driver, "A", "B");
+        //Community.SCC(driver);
+        //Connectivity.shortestPath(driver, "A", "C");
+        //Connectivity.shortestPath(driver, "A", "B");
         driver.close();
     }
 }

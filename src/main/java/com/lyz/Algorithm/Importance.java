@@ -30,4 +30,22 @@ public class Importance extends  CallAlgorithm{
             System.out.println(record.get("name")+" "+record.get("score"));
         }
     }
+
+    /**
+     * 适用于连通图
+     * @param driver
+     */
+    public static void ClosenestCentrality(Driver driver){
+        String query = "CALL algo.closeness.stream('Person', 'Follow')\n" +
+                "YIELD nodeId, centrality\n" +
+                "\n" +
+                "RETURN algo.asNode(nodeId).id AS name, centrality\n" +
+                "ORDER BY centrality DESC\n" +
+                "LIMIT 20;";
+        StatementResult result = Importance.callalgo(query, driver);
+        while(result.hasNext()){
+            Record record = result.next();
+            System.out.println(record.get("name")+" "+record.get("centrality"));
+        }
+    }
 }
